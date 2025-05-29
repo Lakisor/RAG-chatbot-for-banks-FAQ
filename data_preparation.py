@@ -110,11 +110,5 @@ class DataProcessor:
             session.close()
 
 if __name__ == "__main__":
-    try:
-        import faker
-    except ImportError:
-        import subprocess
-        subprocess.check_call(["pip", "install", "faker"])
-    
     processor = DataProcessor()
     processor.generate_embeddings()

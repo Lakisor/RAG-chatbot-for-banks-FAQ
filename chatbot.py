@@ -16,16 +16,13 @@ class RAGChatbot:
             self.tokenizer.pad_token = self.tokenizer.eos_token
     
     def generate_response(self, query, max_length=150, temperature=0.7, top_k=50, top_p=0.9):
-        # Retrieve relevant FAQs
-        relevant_faqs = self.retriever.get_relevant_faqs(query, k=3)
+        relevant_faqs = self.retriever.get_relevant_faqs(query, k=2)
         
         if not relevant_faqs:
             return "I'm sorry, I couldn't find any relevant information to answer your question."
         
-        # Prepare context
         context = "\n".join([f"Q: {faq['question']}\nA: {faq['answer']}" for faq in relevant_faqs])
         
-        # Format prompt for GPT-2
         prompt = f"""Based on the following banking FAQs, answer the user's question.
         
         {context}
@@ -33,7 +30,6 @@ class RAGChatbot:
         Question: {query}
         Answer:"""
         
-        # Generate response
         input_ids = self.tokenizer.encode(prompt, return_tensors='pt').to(self.device)
         
         with torch.no_grad():
@@ -47,7 +43,6 @@ class RAGChatbot:
                 pad_token_id=self.tokenizer.eos_token_id
             )
         
-        # Decode and clean up the response
         response = self.tokenizer.decode(output[0][input_ids.shape[1]:], skip_special_tokens=True)
         return response.strip()
 

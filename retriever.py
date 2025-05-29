@@ -67,7 +67,7 @@ class DualEncoderRetriever:
         finally:
             session.close()
     
-    def get_relevant_faqs(self, query: str, k: int = 3, score_threshold: float = 0.6) -> List[Dict[str, Any]]:
+    def get_relevant_faqs(self, query: str, k: int = 2, score_threshold: float = 0.6) -> List[Dict[str, Any]]:
         """
         Retrieve relevant FAQs for a given query
         
@@ -157,8 +157,6 @@ class DualEncoderRetriever:
         
         self.model.train()
         device = next(self.model.parameters()).device
-        
-
         
         for epoch in range(num_epochs):
             total_loss = 0
